@@ -60,7 +60,11 @@ router.post('/', async (req, res) => {
 
     // ✔️ Armamos la firma con campos relevantes + timestamp fijo
     const datosParaFirmar = `${paciente.id}|${paciente.dni}|${respuestas.join('|')}|${timestamp}`;
-    const firma = crypto.createHash('sha256').update(datosParaFirmar).digest('hex');
+    const firmaRaw = crypto.createHash('sha256').update(datosParaFirmar).digest('hex');
+    const firma = `'${firmaRaw}'`; // con comilla simple al principio para evitar que Sheets lo interprete como fórmula
+    console.log('🧾 Datos para firmar:', datosParaFirmar);
+    console.log('🔐 Firma SHA256 generada:', firma);
+
 
     const fila = [
       paciente.id,
