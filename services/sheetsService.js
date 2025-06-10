@@ -19,7 +19,7 @@ async function guardarEnSheets(fila) {
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.SPREADSHEET_ID,
       range: 'Respuestas!A1', // Asegurate de tener una hoja llamada "Respuestas"
-      valueInputOption: 'USER_ENTERED',
+      valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
       requestBody: {
         values: [fila],
