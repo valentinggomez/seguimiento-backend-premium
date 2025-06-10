@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const respuestasRoute = require('./routes/respuestas');
+const whatsappRoute = require('./routes/enviarWhatsapp');
 
 // Configurar variables de entorno
 dotenv.config();
@@ -31,6 +32,7 @@ app.use(express.json()); // Para leer JSON en el body
 
 // Rutas
 app.use('/respuestas', respuestasRoute);
+app.use('/enviar-whatsapp', whatsappRoute);
 
 // Iniciar servidor
 app.listen(PORT, () => {
