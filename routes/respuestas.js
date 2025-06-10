@@ -56,7 +56,10 @@ router.post('/', async (req, res) => {
     await guardarRespuestaEnSupabase(paciente.id, respuestas);
 
     const crypto = require('crypto');
-    const datosParaFirmar = `${paciente.id}|${paciente.dni}|${new Date().toISOString()}`;
+    const timestamp = new Date().toISOString();
+
+    // ✔️ Armamos la firma con campos relevantes + timestamp fijo
+    const datosParaFirmar = `${paciente.id}|${paciente.dni}|${respuestas.join('|')}|${timestamp}`;
     const firma = crypto.createHash('sha256').update(datosParaFirmar).digest('hex');
 
     const fila = [
@@ -91,7 +94,7 @@ router.post('/', async (req, res) => {
       paciente.esquema_analgesico || '',
       paciente.paracetamol_previo || '',
       paciente.nombre_medico || '',
-      firma // ⬅️ esta es la firma que agregamos al final
+      firma // 🔒 Hash SHA256 generado correctamente
     ];
 
     console.log('📤 Enviando a Sheets:', fila);
@@ -104,5 +107,6 @@ router.post('/', async (req, res) => {
     res.status(500).json({ success: false, error: error.message || 'Error interno del servidor' });
   }
 });
+
 
 module.exports = router;
