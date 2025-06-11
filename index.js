@@ -28,7 +28,10 @@ const restoreSession = async () => {
 };
 
 // Ejecutar restauración antes de iniciar el servidor
-await restoreSession();
+(async () => {
+  await restoreSession();
+})();
+
 
 const app = express();
 
