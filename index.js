@@ -13,17 +13,32 @@ dotenv.config();
 
 // Restaurar sesión de WhatsApp desde ZIP si no existe
 const restoreSession = async () => {
-  const zipPath = './wwebjs_auth.zip';
-  const sessionPath = './.wwebjs_auth';
+  const zipPath = path.join(__dirname, 'wwebjs_auth.zip');
+  const sessionPath = path.join(__dirname, '.wwebjs_auth');
 
-  if (!fs.existsSync(sessionPath)) {
-    console.log('🟡 Restaurando sesión desde ZIP...');
+  const sessionExists = fs.existsSync(sessionPath);
+  const zipExists = fs.existsSync(zipPath);
+
+  if (sessionExists) {
+    // Verificamos si la sesión es válida o está vacía
+    const sessionFiles = fs.readdirSync(sessionPath);
+    if (sessionFiles.length === 0) {
+      console.log('⚠️ Carpeta de sesión vacía. Restaurando desde ZIP...');
+      await fs.createReadStream(zipPath)
+        .pipe(unzipper.Extract({ path: sessionPath }))
+        .promise();
+      console.log('✅ Sesión restaurada desde ZIP');
+    } else {
+      console.log('🔒 Sesión ya presente. No se restaura ZIP');
+    }
+  } else if (zipExists) {
+    console.log('🟡 No hay sesión. Restaurando desde ZIP...');
     await fs.createReadStream(zipPath)
       .pipe(unzipper.Extract({ path: sessionPath }))
       .promise();
-    console.log('✅ Sesión restaurada correctamente');
+    console.log('✅ Sesión restaurada desde ZIP');
   } else {
-    console.log('🔒 Sesión ya existente. No se restaura ZIP');
+    console.log('❌ No se encontró sesión ni ZIP para restaurar');
   }
 };
 
