@@ -13,9 +13,10 @@
     "express": "^5.1.0",
     "googleapis": "^132.0.0",
     "node-fetch": "^2.7.0",
+    "puppeteer": "^22.8.2",
+    "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "^1.30.0",
-    "puppeteer": "^22.8.2"
+    "whatsapp-web.js": "^1.30.0"
   },
   "engines": {
     "node": ">=16.0.0"
