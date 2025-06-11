@@ -1,16 +1,21 @@
-const { Client } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
+const { Client, LocalAuth } = require('whatsapp-web.js');
+const fs = require('fs');
+const qrcode = require('qrcode');
 
 const client = new Client({
+  authStrategy: new LocalAuth({ dataPath: '.wwebjs_auth' }),
   puppeteer: {
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   }
 });
 
-
-client.on('qr', qr => {
-  console.log('🟨 Escaneá este QR con WhatsApp Web');
-  qrcode.generate(qr, { small: true });
+client.on('qr', async qr => {
+  console.log('🟨 Escaneá este QR en: /qr.png');
+  try {
+    await qrcode.toFile('./public/qr.png', qr);
+  } catch (err) {
+    console.error('❌ Error al generar imagen QR:', err);
+  }
 });
 
 client.on('ready', () => {
